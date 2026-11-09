@@ -5,3 +5,6 @@ services:
     plan: free
     buildCommand: "true"
     startCommand: npm start
+    envVars:
+      - key: TRUST_PROXY
+        value: "1"

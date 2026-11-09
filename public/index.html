@@ -121,6 +121,14 @@
   .g3 .core { background:linear-gradient(var(--line) 1px, transparent 1px) 0 0/28px 28px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/28px 28px, var(--core); }
   .g4 .core { background:radial-gradient(80% 110% at 0% 100%, color-mix(in srgb, var(--bad) 16%, transparent), transparent 60%), var(--core); }
 
+  .bar { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:14px 18px 0; font-size:.86rem; }
+  /* example rail */
+  .rail { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; padding:6px 2px 18px; scrollbar-width:thin; }
+  .ex { flex:0 0 260px; scroll-snap-align:start; padding:6px; border-radius:var(--r-shell); background:var(--shell); border:1px solid var(--line); cursor:pointer; font:inherit; color:inherit; text-align:left; transition:transform .6s var(--ease); }
+  .ex:hover { transform:translateY(-4px); } .ex:active { transform:scale(.98); }
+  .ex .core { display:flex; flex-direction:column; gap:4px; padding:22px; }
+  .ex b { font-weight:600; letter-spacing:-.02em; }
+  .ex .big { font-size:1.9rem; letter-spacing:-.04em; color:var(--accent); }
   /* how it works */
   .how { display:grid; gap:40px; }
   @media (min-width:900px) { .how { grid-template-columns:5fr 7fr; gap:72px; align-items:start; } .how .sticky { position:sticky; top:110px; } }
@@ -146,7 +154,7 @@
 <body>
 <nav aria-label="Primary">
   <b>Bundle Auditor</b>
-  <span><a class="l" href="#checks">Checks</a><a class="l" href="#how">How it works</a></span>
+  <span><a class="l" href="#examples">Examples</a><a class="l" href="#checks">Checks</a><a class="l" href="#how">How it works</a></span>
 </nav>
 <div id="tip" role="tooltip"></div>
 
@@ -176,6 +184,12 @@
   </section>
 
   <section id="results" aria-live="polite"></section>
+
+  <section class="blk" id="examples" hidden>
+    <h2 class="rv">Try a real site</h2>
+    <p class="lead rv" style="--d:.06s">Snapshots of well-known homepages. Pick one to see its city and numbers, no typing needed.</p>
+    <div class="rail rv" id="gal" style="--d:.1s"></div>
+  </section>
 
   <section class="blk" id="checks">
     <h2 class="rv">Four checks on every scan</h2>
@@ -310,12 +324,64 @@ if (initGL()) {
   requestAnimationFrame(loop);
 }
 
-// ---------- scan ----------
+// ---------- results ----------
 const results = $('results');
 const row = (s) => '<div class="item"><span class="u mono" title="' + esc(s.url) + '">' + esc(s.url) + '</span>' +
   '<span class="mono hide-s">' + (s.error ? esc(s.error) : kb(s.bytes)) + '</span><span class="mono">' + (s.error ? '' : kb(s.gzipBytes)) + '</span>' +
   '<span class="chip hide-s ' + (s.thirdParty ? 't' : 'f') + '">' + (s.thirdParty ? 'Third-party' : 'Your script') + '</span></div>';
 
+function show(d, opts) {
+  const leaky = new Set(d.secretFindings.map((s) => s.script));
+  if (renderer) build(d.scripts.filter((s) => !s.error).map((s) => ({
+    gzip: s.gzipBytes, third: s.thirdParty, leak: leaky.has(s.url),
+    label: s.url + '  |  ' + kb(s.bytes) + ' raw  |  ' + kb(s.gzipBytes) + ' gzip',
+  })));
+  const shown = d.scripts.slice(0, 6), rest = d.scripts.slice(6);
+  const capped = d.scriptCount >= 25 ? ' Capped at the first 25 scripts, so totals are a lower bound.' : '';
+  results.innerHTML = '<div class="blk" style="padding:0 0 64px">' +
+    '<div class="shell"><div class="core">' +
+    '<div class="bar"><span class="muted">' + esc(opts.note || 'Live scan of ' + d.page) + esc(capped) + '</span><button class="ghost" id="share" type="button">Copy link</button></div>' +
+    '<div class="stats">' +
+      '<div class="stat"><b>' + d.scriptCount + '</b><span>scripts found</span></div>' +
+      '<div class="stat"><b>' + kb(d.totalGzipBytes) + '</b><span>gzip total, ' + kb(d.totalBytes) + ' raw</span></div>' +
+      '<div class="stat"><b class="' + (d.secretFindings.length ? 'bad' : 'ok') + '">' + d.secretFindings.length + '</b><span>possible leaked secrets</span></div>' +
+      '<div class="stat"><b class="' + (d.sourceMapsExposed.length ? 'bad' : 'ok') + '">' + d.sourceMapsExposed.length + '</b><span>source map references</span></div>' +
+    '</div>' +
+    d.secretFindings.map((s) => '<div class="find"><b class="bad">' + esc(s.type) + '</b> <span class="mono">' + esc(s.preview) + '</span><br><span class="muted mono">' + esc(s.script) + '</span></div>').join('') +
+    '<p class="muted" style="padding:6px 22px 0;margin:8px 0 0">Third-party hosts: ' + (d.thirdPartyHosts.map(esc).join(', ') || 'none') + '</p>' +
+    '<div class="list" id="lst">' + shown.map(row).join('') + '</div>' +
+    (rest.length ? '<div style="padding:4px 14px 18px"><button class="ghost" id="more" type="button">Show all ' + d.scripts.length + ' scripts</button></div>' : '') +
+    '</div></div></div>';
+  if (rest.length) $('more').onclick = (ev) => { $('lst').insertAdjacentHTML('beforeend', rest.map(row).join('')); ev.target.remove(); };
+  $('share').onclick = async (ev) => {
+    try { await navigator.clipboard.writeText(opts.share); ev.target.textContent = 'Copied'; }
+    catch { ev.target.textContent = 'Copy failed'; }
+  };
+}
+const toStage = () => stage.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+
+// ---------- examples ----------
+let examples = [];
+function openExample(id, scroll = true) {
+  const x = examples.find((e) => e.id === id);
+  if (!x) return;
+  show(x.report, { share: location.origin + '/#example=' + x.id, note: 'Snapshot of ' + x.name + ', scanned ' + x.scannedAt + '. Not a rating.' });
+  if (scroll) toStage();
+}
+async function loadExamples() {
+  try { examples = await (await fetch('/examples.json')).json(); } catch { return; }
+  $('gal').innerHTML = examples.map((x) => '<button class="ex" data-id="' + esc(x.id) + '"><span class="core"><b>' + esc(x.name) +
+    '</b><span class="mono big">' + kb(x.report.totalGzipBytes) + '</span><span class="muted">gzip, ' + x.report.scriptCount + (x.report.scriptCount >= 25 ? '+' : '') + ' scripts</span></span></button>').join('');
+  $('examples').hidden = false;
+  document.querySelectorAll('#gal .ex').forEach((b) => { b.onclick = () => openExample(b.dataset.id); });
+  const m = location.hash.match(/^#example=([\w-]+)$/);
+  if (m) openExample(m[1], false);
+}
+const q = new URLSearchParams(location.search).get('u');
+if (q) $('u').value = q;
+loadExamples();
+
+// ---------- scan ----------
 $('f').onsubmit = async (e) => {
   e.preventDefault();
   const err = $('err'), btn = $('go'), url = $('u');
@@ -328,26 +394,8 @@ $('f').onsubmit = async (e) => {
     const r = await fetch('/api/audit', { method: 'POST', body: JSON.stringify({ url: url.value, confirmOwner: true }) });
     const d = await r.json();
     if (d.error) { results.innerHTML = ''; err.textContent = d.error; return; }
-    const leaky = new Set(d.secretFindings.map((s) => s.script));
-    if (renderer) build(d.scripts.filter((s) => !s.error).map((s) => ({
-      gzip: s.gzipBytes, third: s.thirdParty, leak: leaky.has(s.url),
-      label: s.url + '  |  ' + kb(s.bytes) + ' raw  |  ' + kb(s.gzipBytes) + ' gzip',
-    })));
-    const shown = d.scripts.slice(0, 6), rest = d.scripts.slice(6);
-    results.innerHTML = '<div class="blk" style="padding:0 0 64px">' +
-      '<div class="shell"><div class="core"><div class="stats">' +
-        '<div class="stat"><b>' + d.scriptCount + '</b><span>scripts found</span></div>' +
-        '<div class="stat"><b>' + kb(d.totalGzipBytes) + '</b><span>gzip total, ' + kb(d.totalBytes) + ' raw</span></div>' +
-        '<div class="stat"><b class="' + (d.secretFindings.length ? 'bad' : 'ok') + '">' + d.secretFindings.length + '</b><span>possible leaked secrets</span></div>' +
-        '<div class="stat"><b class="' + (d.sourceMapsExposed.length ? 'bad' : 'ok') + '">' + d.sourceMapsExposed.length + '</b><span>source map references</span></div>' +
-      '</div>' +
-      d.secretFindings.map((s) => '<div class="find"><b class="bad">' + esc(s.type) + '</b> <span class="mono">' + esc(s.preview) + '</span><br><span class="muted mono">' + esc(s.script) + '</span></div>').join('') +
-      '<p class="muted" style="padding:6px 22px 0;margin:8px 0 0">Third-party hosts: ' + (d.thirdPartyHosts.map(esc).join(', ') || 'none') + '</p>' +
-      '<div class="list" id="lst">' + shown.map(row).join('') + '</div>' +
-      (rest.length ? '<div style="padding:4px 14px 18px"><button class="ghost" id="more" type="button">Show all ' + d.scripts.length + ' scripts</button></div>' : '') +
-      '</div></div></div>';
-    if (rest.length) $('more').onclick = (ev) => { $('lst').insertAdjacentHTML('beforeend', rest.map(row).join('')); ev.target.remove(); };
-    results.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    show(d, { share: location.origin + '/?u=' + encodeURIComponent(url.value) });
+    toStage();
   } catch (x) { results.innerHTML = ''; err.textContent = x.message; }
   finally { btn.disabled = false; }
 };

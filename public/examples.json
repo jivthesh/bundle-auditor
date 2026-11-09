@@ -1,0 +1,690 @@
+[
+  {
+    "id": "github",
+    "name": "GitHub",
+    "scannedAt": "2026-11-09",
+    "report": {
+      "page": "https://github.com/",
+      "status": 200,
+      "scriptCount": 5,
+      "totalBytes": 2828116,
+      "totalGzipBytes": 871700,
+      "thirdPartyHosts": [],
+      "secretFindings": [],
+      "sourceMapsExposed": [
+        "https://github.githubassets.com/assets/high-contrast-cookie-19546c435025711b.js",
+        "https://github.githubassets.com/assets/core-c4f61e2f15bf8f87.js",
+        "https://github.githubassets.com/assets/marketing-essentials-b333bd5d972d5e91.js",
+        "https://github.githubassets.com/assets/landing-pages-1d1cb134ca379f01.js",
+        "https://github.githubassets.com/assets/global-banner-disable-92a64558879ee38b.js"
+      ],
+      "scripts": [
+        {
+          "url": "https://github.githubassets.com/assets/high-contrast-cookie-19546c435025711b.js",
+          "thirdParty": false,
+          "bytes": 1097,
+          "gzipBytes": 621,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://github.githubassets.com/assets/core-c4f61e2f15bf8f87.js",
+          "thirdParty": false,
+          "bytes": 431769,
+          "gzipBytes": 115912,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://github.githubassets.com/assets/marketing-essentials-b333bd5d972d5e91.js",
+          "thirdParty": false,
+          "bytes": 5226,
+          "gzipBytes": 2175,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://github.githubassets.com/assets/landing-pages-1d1cb134ca379f01.js",
+          "thirdParty": false,
+          "bytes": 2389428,
+          "gzipBytes": 752578,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://github.githubassets.com/assets/global-banner-disable-92a64558879ee38b.js",
+          "thirdParty": false,
+          "bytes": 596,
+          "gzipBytes": 414,
+          "sourceMapExposed": true,
+          "secrets": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "hn",
+    "name": "Hacker News",
+    "scannedAt": "2026-11-09",
+    "report": {
+      "page": "https://news.ycombinator.com/",
+      "status": 200,
+      "scriptCount": 1,
+      "totalBytes": 5217,
+      "totalGzipBytes": 1980,
+      "thirdPartyHosts": [],
+      "secretFindings": [],
+      "sourceMapsExposed": [],
+      "scripts": [
+        {
+          "url": "https://news.ycombinator.com/hn.js?X4GxU6LOOJEiMH6RMNhG",
+          "thirdParty": false,
+          "bytes": 5217,
+          "gzipBytes": 1980,
+          "sourceMapExposed": false,
+          "secrets": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "react",
+    "name": "React docs",
+    "scannedAt": "2026-11-09",
+    "report": {
+      "page": "https://react.dev/",
+      "status": 200,
+      "scriptCount": 11,
+      "totalBytes": 1335912,
+      "totalGzipBytes": 436055,
+      "thirdPartyHosts": [
+        "www.googletagmanager.com"
+      ],
+      "secretFindings": [],
+      "sourceMapsExposed": [],
+      "scripts": [
+        {
+          "url": "https://www.googletagmanager.com/gtag/js?id=G-B1E83PJ3RT",
+          "thirdParty": true,
+          "bytes": 480884,
+          "gzipBytes": 163962,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/chunks/polyfills-42372ed130431b0a.js",
+          "thirdParty": false,
+          "bytes": 112594,
+          "gzipBytes": 39473,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/chunks/webpack-95fc1f1713249e81.js",
+          "thirdParty": false,
+          "bytes": 4077,
+          "gzipBytes": 2142,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/chunks/framework-76ad44d61c11f057.js",
+          "thirdParty": false,
+          "bytes": 181788,
+          "gzipBytes": 57690,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/chunks/main-8bc660a98b463b2d.js",
+          "thirdParty": false,
+          "bytes": 130717,
+          "gzipBytes": 37955,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/chunks/pages/_app-6d7b64b3b21a9551.js",
+          "thirdParty": false,
+          "bytes": 1235,
+          "gzipBytes": 739,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/chunks/668-9be9de6fa7660277.js",
+          "thirdParty": false,
+          "bytes": 101632,
+          "gzipBytes": 33259,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/chunks/928-22de2b840e40e9ed.js",
+          "thirdParty": false,
+          "bytes": 307485,
+          "gzipBytes": 96949,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/chunks/pages/%5B%5B...markdownPath%5D%5D-2d1a1f3dd79ac8eb.js",
+          "thirdParty": false,
+          "bytes": 14145,
+          "gzipBytes": 3192,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/CEYJ3mgqHuXqGtMH6AzCm/_buildManifest.js",
+          "thirdParty": false,
+          "bytes": 1201,
+          "gzipBytes": 582,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://react.dev/_next/static/CEYJ3mgqHuXqGtMH6AzCm/_ssgManifest.js",
+          "thirdParty": false,
+          "bytes": 154,
+          "gzipBytes": 112,
+          "sourceMapExposed": false,
+          "secrets": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "scannedAt": "2026-11-09",
+    "report": {
+      "page": "https://stripe.com/in",
+      "status": 200,
+      "scriptCount": 25,
+      "totalBytes": 182965,
+      "totalGzipBytes": 73068,
+      "thirdPartyHosts": [],
+      "secretFindings": [],
+      "sourceMapsExposed": [],
+      "scripts": [
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/polyfills-42372ed130431b0a.js",
+          "thirdParty": false,
+          "bytes": 112594,
+          "gzipBytes": 39473,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/49450.ba8bdeacb2ae3f4e.js",
+          "thirdParty": false,
+          "bytes": 1718,
+          "gzipBytes": 992,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/99791.a7f741b779b23047.js",
+          "thirdParty": false,
+          "bytes": 4941,
+          "gzipBytes": 2035,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/60864.f462ab64ab99a6d2.js",
+          "thirdParty": false,
+          "bytes": 2340,
+          "gzipBytes": 1242,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/41056.391e5aa5bf17b4e4.js",
+          "thirdParty": false,
+          "bytes": 5329,
+          "gzipBytes": 2700,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/33429.ebf4f50cc61d4859.js",
+          "thirdParty": false,
+          "bytes": 2931,
+          "gzipBytes": 1528,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/7205.b1fa6a14487cf1a1.js",
+          "thirdParty": false,
+          "bytes": 2503,
+          "gzipBytes": 1224,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/29658.230298d5fcee0081.js",
+          "thirdParty": false,
+          "bytes": 4135,
+          "gzipBytes": 2075,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/51092.558bf86d4d6d35cc.js",
+          "thirdParty": false,
+          "bytes": 2743,
+          "gzipBytes": 1340,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/72252.cdfab8a8c6c7e3e4.js",
+          "thirdParty": false,
+          "bytes": 3289,
+          "gzipBytes": 1512,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/55556.c120acaca1226a50.js",
+          "thirdParty": false,
+          "bytes": 3391,
+          "gzipBytes": 1712,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/8653.b1423805849013a7.js",
+          "thirdParty": false,
+          "bytes": 2654,
+          "gzipBytes": 1347,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/66084.2df5c58fcbb72480.js",
+          "thirdParty": false,
+          "bytes": 2211,
+          "gzipBytes": 1190,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/27355.903cdaadb9326fc2.js",
+          "thirdParty": false,
+          "bytes": 1450,
+          "gzipBytes": 844,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/54252.b109314146e3cf30.js",
+          "thirdParty": false,
+          "bytes": 2222,
+          "gzipBytes": 1201,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/93051.1cc9f5f6e52dff0a.js",
+          "thirdParty": false,
+          "bytes": 2297,
+          "gzipBytes": 1182,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/70191.75cd9e3319850053.js",
+          "thirdParty": false,
+          "bytes": 2286,
+          "gzipBytes": 1061,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/98762.cbc5581c9806ac88.js",
+          "thirdParty": false,
+          "bytes": 9500,
+          "gzipBytes": 3712,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/92661.79b136b3bed60df6.js",
+          "thirdParty": false,
+          "bytes": 2905,
+          "gzipBytes": 1315,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/65142.01bbe82aafd86a0d.js",
+          "thirdParty": false,
+          "bytes": 588,
+          "gzipBytes": 392,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/92255.54da7a0601353f09.js",
+          "thirdParty": false,
+          "bytes": 1670,
+          "gzipBytes": 958,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/17383.894f236a9f1c48ef.js",
+          "thirdParty": false,
+          "bytes": 762,
+          "gzipBytes": 475,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/87381.98aeb4190c8ee14a.js",
+          "thirdParty": false,
+          "bytes": 2195,
+          "gzipBytes": 1136,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/11744.21f4f6e9276240c0.js",
+          "thirdParty": false,
+          "bytes": 2928,
+          "gzipBytes": 1093,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://b.stripecdn.com/mkt-ssr-statics/assets/_next/static/chunks/77966.62ac43bc73d1fda1.js",
+          "thirdParty": false,
+          "bytes": 3383,
+          "gzipBytes": 1329,
+          "sourceMapExposed": false,
+          "secrets": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "scannedAt": "2026-11-09",
+    "report": {
+      "page": "https://vercel.com/",
+      "status": 200,
+      "scriptCount": 25,
+      "totalBytes": 1200756,
+      "totalGzipBytes": 354588,
+      "thirdPartyHosts": [],
+      "secretFindings": [],
+      "sourceMapsExposed": [
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/3ax878yiio--h.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0a756y5g9dct9.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1xfgo2cm5jixl.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/05e7qw-29b39f.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/168r-mgbee569.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/turbopack-2d6yzswnspsc7.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/2r9bnqhyyag7a.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/2pear57g9pv1p.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0relcc5yf6cci.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1ucx8cw75c95c.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/30yhpz_qaohgu.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0mv05eihh7v7e.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1-u5tnuqrq_q3.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/36o_cd5bx1xcy.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/12904qs43fa-c.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1e5mcz24xdh9p.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/350_1t37f95yc.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0qam3lr7-yy4y.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/3kwv9r7bluv66.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1sperssjyrch1.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/3eefvk2-xrh7y.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/2y3m8skjgnzqj.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/2xolsd5t2xork.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0fx_y6v--6e6x.js",
+        "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0h-3azbyow04j.js"
+      ],
+      "scripts": [
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/3ax878yiio--h.js",
+          "thirdParty": false,
+          "bytes": 43879,
+          "gzipBytes": 13843,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0a756y5g9dct9.js",
+          "thirdParty": false,
+          "bytes": 34666,
+          "gzipBytes": 9182,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1xfgo2cm5jixl.js",
+          "thirdParty": false,
+          "bytes": 208136,
+          "gzipBytes": 65772,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/05e7qw-29b39f.js",
+          "thirdParty": false,
+          "bytes": 39228,
+          "gzipBytes": 14040,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/168r-mgbee569.js",
+          "thirdParty": false,
+          "bytes": 134512,
+          "gzipBytes": 36887,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/turbopack-2d6yzswnspsc7.js",
+          "thirdParty": false,
+          "bytes": 13851,
+          "gzipBytes": 5383,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/2r9bnqhyyag7a.js",
+          "thirdParty": false,
+          "bytes": 14349,
+          "gzipBytes": 3774,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/2pear57g9pv1p.js",
+          "thirdParty": false,
+          "bytes": 11960,
+          "gzipBytes": 4228,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0relcc5yf6cci.js",
+          "thirdParty": false,
+          "bytes": 991,
+          "gzipBytes": 514,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1ucx8cw75c95c.js",
+          "thirdParty": false,
+          "bytes": 46380,
+          "gzipBytes": 9056,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/30yhpz_qaohgu.js",
+          "thirdParty": false,
+          "bytes": 13763,
+          "gzipBytes": 6044,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0mv05eihh7v7e.js",
+          "thirdParty": false,
+          "bytes": 26807,
+          "gzipBytes": 10636,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1-u5tnuqrq_q3.js",
+          "thirdParty": false,
+          "bytes": 26237,
+          "gzipBytes": 9620,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/36o_cd5bx1xcy.js",
+          "thirdParty": false,
+          "bytes": 159556,
+          "gzipBytes": 27727,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/12904qs43fa-c.js",
+          "thirdParty": false,
+          "bytes": 211755,
+          "gzipBytes": 61760,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1e5mcz24xdh9p.js",
+          "thirdParty": false,
+          "bytes": 9976,
+          "gzipBytes": 3663,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/350_1t37f95yc.js",
+          "thirdParty": false,
+          "bytes": 7843,
+          "gzipBytes": 3135,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0qam3lr7-yy4y.js",
+          "thirdParty": false,
+          "bytes": 7672,
+          "gzipBytes": 2942,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/3kwv9r7bluv66.js",
+          "thirdParty": false,
+          "bytes": 24589,
+          "gzipBytes": 9508,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/1sperssjyrch1.js",
+          "thirdParty": false,
+          "bytes": 32074,
+          "gzipBytes": 10885,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/3eefvk2-xrh7y.js",
+          "thirdParty": false,
+          "bytes": 64821,
+          "gzipBytes": 20184,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/2y3m8skjgnzqj.js",
+          "thirdParty": false,
+          "bytes": 24491,
+          "gzipBytes": 9654,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/2xolsd5t2xork.js",
+          "thirdParty": false,
+          "bytes": 22492,
+          "gzipBytes": 8703,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0fx_y6v--6e6x.js",
+          "thirdParty": false,
+          "bytes": 1629,
+          "gzipBytes": 692,
+          "sourceMapExposed": true,
+          "secrets": []
+        },
+        {
+          "url": "https://vercel.com/vc-ap-vercel-marketing/_next/static/immutable/chunks/0h-3azbyow04j.js",
+          "thirdParty": false,
+          "bytes": 19099,
+          "gzipBytes": 6756,
+          "sourceMapExposed": true,
+          "secrets": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "wikipedia",
+    "name": "Wikipedia",
+    "scannedAt": "2026-11-09",
+    "report": {
+      "page": "https://www.wikipedia.org/",
+      "status": 200,
+      "scriptCount": 2,
+      "totalBytes": 28315,
+      "totalGzipBytes": 9625,
+      "thirdPartyHosts": [],
+      "secretFindings": [],
+      "sourceMapsExposed": [],
+      "scripts": [
+        {
+          "url": "https://www.wikipedia.org/portal/wikipedia.org/assets/js/index-8dfbdb3a7a.js",
+          "thirdParty": false,
+          "bytes": 27735,
+          "gzipBytes": 9280,
+          "sourceMapExposed": false,
+          "secrets": []
+        },
+        {
+          "url": "https://www.wikipedia.org/portal/wikipedia.org/assets/js/gt-ie9-507b16b6be.js",
+          "thirdParty": false,
+          "bytes": 580,
+          "gzipBytes": 345,
+          "sourceMapExposed": false,
+          "secrets": []
+        }
+      ]
+    }
+  }
+]
