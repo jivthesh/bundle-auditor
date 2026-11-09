@@ -263,6 +263,8 @@ function build(items) {
   towers.forEach((t) => { city.remove(t); t.geometry.dispose(); t.material.dispose(); });
   towers = [];
   const cols = Math.ceil(Math.sqrt(items.length)), rows = Math.ceil(items.length / cols), gap = 1.7;
+  const height = (g) => Math.max(.3, Math.sqrt(g / 1024) * .55);
+  const fit = Math.min(1, 5.5 / Math.max(...items.map((it) => height(it.gzip)))); // keep the tallest tower inside the stage
   items.forEach((it, i) => {
     const kind = it.leak ? 'leak' : it.third ? 'third' : 'first';
     const geo = new THREE.BoxGeometry(1, 1, 1); geo.translate(0, .5, 0);
@@ -270,7 +272,7 @@ function build(items) {
     const mat = new THREE.MeshStandardMaterial({ color: c, emissive: c.clone(), emissiveIntensity: .2, roughness: .4, metalness: .25 });
     const m = new THREE.Mesh(geo, mat);
     m.position.set((i % cols - (cols - 1) / 2) * gap, 0, (Math.floor(i / cols) - (rows - 1) / 2) * gap);
-    const target = Math.min(9, Math.max(.3, Math.sqrt(it.gzip / 1024) * .55));
+    const target = Math.max(.3, height(it.gzip) * fit);
     m.scale.set(1, reduce ? target : .01, 1);
     m.userData = { target, kind, label: it.label };
     city.add(m); towers.push(m);

@@ -52,6 +52,13 @@ async function fetchCapped(rawUrl, hops = 0) {
   return { url: url.href, status: res.status, body: buf };
 }
 
+// shortcut: label heuristic (github ~ githubassets), no public-suffix list; swap in one if odd TLDs cause misses.
+export function sameSite(a, b) {
+  const root = (h) => h.split('.').slice(-2)[0];
+  const x = root(a), y = root(b);
+  return x === y || (Math.min(x.length, y.length) >= 4 && (x.startsWith(y) || y.startsWith(x)));
+}
+
 export function scanSecrets(text) {
   const hits = [];
   for (const [label, re] of SECRET_PATTERNS) {
@@ -78,7 +85,7 @@ export async function audit(pageUrl) {
       const text = r.body.toString('utf8');
       scripts.push({
         url: src,
-        thirdParty: new URL(src).hostname !== pageHost,
+        thirdParty: !sameSite(new URL(src).hostname, pageHost),
         bytes: r.body.length,
         gzipBytes: zlib.gzipSync(r.body).length,
         sourceMapExposed: /\/\/# sourceMappingURL=/.test(text),

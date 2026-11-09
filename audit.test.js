@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isPrivateIp, scanSecrets, audit } from './audit.js';
+import { isPrivateIp, scanSecrets, audit, sameSite } from './audit.js';
+
+test('sameSite groups own CDNs, splits real third parties', () => {
+  assert.ok(sameSite('github.githubassets.com', 'github.com'));
+  assert.ok(sameSite('b.stripecdn.com', 'stripe.com'));
+  assert.ok(!sameSite('www.googletagmanager.com', 'react.dev'));
+});
 
 test('private IPs blocked, public allowed', () => {
   for (const ip of ['127.0.0.1', '10.1.2.3', '192.168.0.1', '172.20.0.1', '169.254.169.254', '::1', '::ffff:127.0.0.1', 'fd00::1'])
