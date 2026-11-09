@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Bundle Auditor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+  :root {
+    --bg:#0a0c0d; --fg:#eef1ef; --muted:#8b9490; --line:rgba(255,255,255,.09);
+    --shell:rgba(255,255,255,.035); --core:#101314; --hl:inset 0 1px 1px rgba(255,255,255,.08);
+    --accent:#3ddc97; --on-accent:#04140c; --amber:#f2b134; --bad:#ff5d73;
+    --scene-bg:#0a0c0d; --grid1:#1d2a25; --grid2:#121917; --glow:rgba(61,220,151,.16);
+    --glass:rgba(16,19,20,.62);
+    --ease:cubic-bezier(.32,.72,0,1);
+    --z-nav:20; --z-tip:30;
+    --r-shell:2rem; --r-core:calc(2rem - 6px);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:#f3f4f2; --fg:#0d1110; --muted:#5b6560; --line:rgba(0,0,0,.09);
+      --shell:rgba(0,0,0,.035); --core:#fbfbfa; --hl:inset 0 1px 1px rgba(255,255,255,.9);
+      --accent:#0b7a4b; --on-accent:#ffffff; --amber:#a86400; --bad:#c4223f;
+      --scene-bg:#f3f4f2; --grid1:#c3cec8; --grid2:#dbe2de; --glow:rgba(11,122,75,.14);
+      --glass:rgba(251,251,250,.7);
+    }
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:400 16px/1.6 Geist,system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  .mono { font-family:"Geist Mono",ui-monospace,monospace; }
+  a { color:inherit; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* nav: floating pill */
+  nav { position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:var(--z-nav); display:flex; align-items:center; gap:28px; padding:8px 8px 8px 20px; border-radius:999px; border:1px solid var(--line); background:var(--glass); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); box-shadow:var(--hl); white-space:nowrap; }
+  nav b { font-weight:600; letter-spacing:-.02em; }
+  nav a.l { color:var(--muted); text-decoration:none; font-size:.9rem; padding:8px 14px; border-radius:999px; transition:color .5s var(--ease), background .5s var(--ease); }
+  nav a.l:hover { color:var(--fg); background:var(--shell); }
+  @media (max-width:560px) { nav { gap:12px; } nav a.l:first-of-type { display:none; } }
+
+  main { max-width:1240px; margin:0 auto; padding:0 16px; }
+
+  /* hero */
+  .hero { min-height:100dvh; display:grid; grid-template-columns:1fr; gap:32px; align-items:center; padding:96px 0 48px; }
+  @media (min-width:960px) { .hero { grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:56px; } }
+  h1 { font-weight:600; font-size:clamp(2.3rem,4.4vw,3.7rem); line-height:1.05; letter-spacing:-.045em; margin:0 0 20px; text-wrap:balance; }
+  h1 em { font-style:normal; color:var(--accent); }
+  .sub { color:var(--muted); font-size:1.1rem; max-width:46ch; margin:0 0 32px; }
+
+  /* double bezel */
+  .shell { padding:6px; border-radius:var(--r-shell); background:var(--shell); border:1px solid var(--line); }
+  .core { border-radius:var(--r-core); background:var(--core); box-shadow:var(--hl); }
+  .pad { padding:20px; }
+
+  /* form */
+  .fl { display:block; font-size:.78rem; color:var(--muted); padding:14px 18px 0; }
+  .row { display:flex; gap:8px; padding:8px; flex-wrap:wrap; }
+  .row input[type=url] { flex:1 1 220px; min-width:0; padding:0 20px; height:52px; font:inherit; color:var(--fg); background:var(--shell); border:1px solid var(--line); border-radius:999px; transition:border-color .5s var(--ease); }
+  .row input[type=url]::placeholder { color:var(--muted); }
+  .row input[type=url]:hover { border-color:rgba(127,127,127,.35); }
+  .btn { display:inline-flex; align-items:center; gap:14px; height:52px; padding:0 8px 0 24px; font:inherit; font-weight:600; color:var(--on-accent); background:var(--accent); border:0; border-radius:999px; cursor:pointer; white-space:nowrap; transition:transform .5s var(--ease), filter .5s var(--ease); }
+  .btn .ic { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:rgba(0,0,0,.14); transition:transform .5s var(--ease); font-size:1.1rem; }
+  .btn:hover .ic { transform:translate(2px,-1px) scale(1.06); }
+  .btn:active { transform:scale(.98); }
+  .btn:disabled { filter:saturate(.4); cursor:progress; }
+  .ghost { display:inline-flex; align-items:center; gap:8px; height:44px; padding:0 20px; font:inherit; font-weight:500; color:var(--fg); background:transparent; border:1px solid var(--line); border-radius:999px; cursor:pointer; transition:background .5s var(--ease), transform .5s var(--ease); }
+  .ghost:hover { background:var(--shell); } .ghost:active { transform:scale(.98); }
+  .own { display:flex; align-items:center; gap:10px; padding:4px 18px 16px; color:var(--muted); font-size:.88rem; cursor:pointer; }
+  .own input { appearance:none; flex:none; width:20px; height:20px; border-radius:6px; border:1px solid rgba(127,127,127,.5); background:transparent; display:grid; place-items:center; cursor:pointer; transition:background .4s var(--ease), border-color .4s var(--ease); }
+  .own input:checked { background:var(--accent); border-color:var(--accent); }
+  .own input:checked::after { content:""; width:5px; height:9px; border:solid var(--on-accent); border-width:0 2px 2px 0; transform:rotate(45deg) translate(-1px,-1px); }
+  #err { margin:0; padding:0 18px 16px; color:var(--bad); font-size:.9rem; min-height:0; }
+  #err:empty { display:none; }
+
+  /* 3D stage */
+  .stage { position:relative; height:min(70dvh,620px); min-height:340px; overflow:hidden; background:radial-gradient(120% 90% at 50% 100%, var(--glow), transparent 65%), var(--scene-bg); }
+  .stage canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .legend { position:absolute; left:14px; bottom:14px; display:flex; gap:14px; flex-wrap:wrap; padding:8px 14px; border-radius:999px; border:1px solid var(--line); background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); font-size:.78rem; color:var(--muted); }
+  .legend i { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:6px; }
+  #tip { position:fixed; z-index:var(--z-tip); pointer-events:none; display:none; max-width:340px; padding:8px 12px; font-size:.78rem; border-radius:12px; border:1px solid var(--line); background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); word-break:break-all; }
+
+  /* sections */
+  section.blk { padding:96px 0; }
+  h2 { font-weight:600; font-size:clamp(1.8rem,3.6vw,2.8rem); line-height:1.08; letter-spacing:-.04em; margin:0 0 14px; }
+  .lead { color:var(--muted); max-width:52ch; margin:0 0 40px; }
+
+  /* results */
+  #results:empty { display:none; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:8px; padding:8px; }
+  .stat { padding:20px; border-radius:calc(var(--r-core) - 8px); background:var(--shell); }
+  .stat b { display:block; font:500 2rem/1.1 "Geist Mono",monospace; letter-spacing:-.04em; }
+  .stat span { color:var(--muted); font-size:.84rem; }
+  .bad { color:var(--bad); } .ok { color:var(--accent); } .muted { color:var(--muted); }
+  .list { padding:8px; display:grid; gap:4px; }
+  .item { display:grid; grid-template-columns:minmax(0,1fr) auto auto auto; gap:16px; align-items:center; padding:12px 14px; border-radius:16px; transition:background .4s var(--ease); font-size:.86rem; }
+  .item:hover { background:var(--shell); }
+  .item .u { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .chip { font-size:.72rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted); }
+  .chip.t { color:var(--amber); } .chip.f { color:var(--accent); }
+  .find { margin:8px; padding:14px 16px; border-radius:18px; background:color-mix(in srgb, var(--bad) 10%, transparent); font-size:.88rem; }
+  @media (max-width:640px) { .item { grid-template-columns:minmax(0,1fr) auto; } .item .hide-s { display:none; } }
+  .sk { position:relative; overflow:hidden; border-radius:calc(var(--r-core) - 8px); background:var(--shell); height:92px; }
+  .sk::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(127,127,127,.16),transparent); transform:translateX(-100%); animation:shim 1.4s var(--ease) infinite; }
+  @keyframes shim { to { transform:translateX(100%); } }
+
+  /* bento */
+  .bento { display:grid; grid-template-columns:repeat(12,1fr); gap:12px; }
+  .cell { grid-column:span 12; }
+  @media (min-width:860px) { .c7 { grid-column:span 7; } .c5 { grid-column:span 5; } }
+  .cell .core { height:100%; padding:32px; min-height:220px; display:flex; flex-direction:column; justify-content:flex-end; position:relative; overflow:hidden; }
+  .cell h3 { margin:14px 0 6px; font-size:1.3rem; letter-spacing:-.03em; font-weight:600; }
+  .cell p { margin:0; color:var(--muted); max-width:44ch; }
+  .cell .ph { font-size:1.7rem; }
+  .g1 .core { background:radial-gradient(90% 120% at 100% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%), var(--core); }
+  .g2 .core { background:linear-gradient(160deg, color-mix(in srgb, var(--amber) 16%, transparent), transparent 55%), var(--core); }
+  .g3 .core { background:linear-gradient(var(--line) 1px, transparent 1px) 0 0/28px 28px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/28px 28px, var(--core); }
+  .g4 .core { background:radial-gradient(80% 110% at 0% 100%, color-mix(in srgb, var(--bad) 16%, transparent), transparent 60%), var(--core); }
+
+  /* how it works */
+  .how { display:grid; gap:40px; }
+  @media (min-width:900px) { .how { grid-template-columns:5fr 7fr; gap:72px; align-items:start; } .how .sticky { position:sticky; top:110px; } }
+  .steps { display:grid; gap:8px; padding:8px; }
+  .step { display:grid; grid-template-columns:44px 1fr; gap:16px; padding:22px; border-radius:calc(var(--r-core) - 8px); background:var(--shell); transition:transform .6s var(--ease), background .6s var(--ease); }
+  .step:hover { transform:translateY(-3px); }
+  .step .ph { font-size:1.5rem; color:var(--accent); }
+  .step h3 { margin:0 0 4px; font-size:1.1rem; letter-spacing:-.02em; }
+  .step p { margin:0; color:var(--muted); font-size:.95rem; }
+
+  footer { padding:40px 0 56px; color:var(--muted); font-size:.88rem; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; border-top:1px solid var(--line); }
+
+  /* scroll reveal */
+  .rv { opacity:0; transform:translateY(28px); filter:blur(8px); transition:opacity .9s var(--ease) var(--d,0s), transform .9s var(--ease) var(--d,0s), filter .9s var(--ease) var(--d,0s); }
+  .rv.in { opacity:1; transform:none; filter:none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior:auto; }
+    .rv { opacity:1; transform:none; filter:none; transition:none; }
+    .sk::after { animation:none; } .step:hover { transform:none; }
+  }
+</style>
+</head>
+<body>
+<nav aria-label="Primary">
+  <b>Bundle Auditor</b>
+  <span><a class="l" href="#checks">Checks</a><a class="l" href="#how">How it works</a></span>
+</nav>
+<div id="tip" role="tooltip"></div>
+
+<main>
+  <section class="hero">
+    <div>
+      <h1 class="rv">Your website's JavaScript, as a <em>city.</em></h1>
+      <p class="sub rv" style="--d:.08s">Paste a URL. Every script becomes a tower, so heavy bundles and leaked keys stand out at once.</p>
+      <form id="f" class="shell rv" style="--d:.16s" novalidate>
+        <div class="core">
+          <label class="fl" for="u">Website address</label>
+          <div class="row">
+            <input id="u" type="url" placeholder="https://yoursite.com" required autocomplete="url">
+            <button class="btn" id="go" type="submit">Scan site <span class="ic"><i class="ph-light ph-arrow-up-right"></i></span></button>
+          </div>
+          <label class="own"><input type="checkbox" id="own"> I own this site or have permission to scan it</label>
+          <p id="err" role="alert"></p>
+        </div>
+      </form>
+    </div>
+    <div class="shell rv" style="--d:.24s">
+      <div class="core stage" id="stage">
+        <canvas id="gl" aria-label="3D city of your scripts. Each tower is one script, taller means heavier." role="img"></canvas>
+        <div class="legend"><span><i style="background:var(--accent)"></i>Your scripts</span><span><i style="background:var(--amber)"></i>Third-party</span><span><i style="background:var(--bad)"></i>Possible leak</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results" aria-live="polite"></section>
+
+  <section class="blk" id="checks">
+    <h2 class="rv">Four checks on every scan</h2>
+    <p class="lead rv" style="--d:.06s">Each one points at something you can fix today.</p>
+    <div class="bento">
+      <div class="cell c7 g1 shell rv"><div class="core"><i class="ph-light ph-key"></i><h3>Leaked keys</h3><p>Finds AWS, Google, Stripe, GitHub and Slack secrets shipped inside your public scripts. Findings are masked in the report.</p></div></div>
+      <div class="cell c5 g2 shell rv" style="--d:.08s"><div class="core"><i class="ph-light ph-scales"></i><h3>Bundle weight</h3><p>Raw and gzip size for every script, so you see what visitors actually download.</p></div></div>
+      <div class="cell c5 g3 shell rv"><div class="core"><i class="ph-light ph-globe-hemisphere-west"></i><h3>Third-party scripts</h3><p>Lists every outside host that runs code on your pages.</p></div></div>
+      <div class="cell c7 g4 shell rv" style="--d:.08s"><div class="core"><i class="ph-light ph-map-trifold"></i><h3>Exposed source maps</h3><p>Flags scripts that point to source maps, which can reveal your original code to anyone.</p></div></div>
+    </div>
+  </section>
+
+  <section class="blk" id="how">
+    <div class="how">
+      <div class="sticky">
+        <h2 class="rv">From a URL to a skyline in seconds</h2>
+        <p class="lead rv" style="--d:.06s">Nothing is installed on your site. Only public pages are read, and private addresses are blocked.</p>
+      </div>
+      <div class="shell rv"><div class="core steps">
+        <div class="step"><i class="ph-light ph-download-simple"></i><div><h3>Fetch</h3><p>Loads your page and finds every script it references.</p></div></div>
+        <div class="step"><i class="ph-light ph-package"></i><div><h3>Download</h3><p>Pulls each file, up to 25 scripts of 5 MB each.</p></div></div>
+        <div class="step"><i class="ph-light ph-magnifying-glass"></i><div><h3>Analyze</h3><p>Measures size, matches key patterns and notes source maps and outside hosts.</p></div></div>
+        <div class="step"><i class="ph-light ph-buildings"></i><div><h3>Build</h3><p>Turns the results into the city. Height is gzip size, color is origin and risk.</p></div></div>
+      </div></div>
+    </div>
+  </section>
+
+  <footer><span>Bundle Auditor</span><span>Public pages only. Results are not stored.</span></footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const kb = (n) => (n / 1024).toFixed(1) + ' KB';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+// scroll reveal (IntersectionObserver, no scroll listeners)
+const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+const watch = (root = document) => root.querySelectorAll('.rv:not(.in)').forEach((el) => io.observe(el));
+watch();
+
+// ---------- 3D city ----------
+let renderer, scene, camera, city, grid, towers = [], mouse = { x: 0, y: 0 }, hover = null;
+const stage = $('stage'), canvas = $('gl');
+const colorFor = (k) => new THREE.Color(cv(k === 'leak' ? '--bad' : k === 'third' ? '--amber' : '--accent'));
+
+function applyTheme() {
+  if (!scene) return;
+  scene.fog.color = new THREE.Color(cv('--scene-bg'));
+  if (grid) { scene.remove(grid); grid.geometry.dispose(); grid.material.dispose(); }
+  grid = new THREE.GridHelper(60, 60, cv('--grid1'), cv('--grid2'));
+  scene.add(grid);
+  towers.forEach((m) => { const c = colorFor(m.userData.kind); m.material.color = c; m.material.emissive = c.clone(); });
+}
+function initGL() {
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); }
+  catch { canvas.style.display = 'none'; return false; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x000000, 0.035);
+  camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  scene.add(new THREE.AmbientLight(0x8fa39a, 0.95));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.85); sun.position.set(6, 12, 8); scene.add(sun);
+  city = new THREE.Group(); scene.add(city);
+  applyTheme();
+  new ResizeObserver(resize).observe(stage); resize();
+  matchMedia('(prefers-color-scheme: light)').addEventListener('change', applyTheme);
+  stage.addEventListener('mousemove', (e) => {
+    const r = stage.getBoundingClientRect();
+    mouse.x = (e.clientX - r.left) / r.width - .5; mouse.y = (e.clientY - r.top) / r.height - .5;
+    pick(e, r);
+  });
+  stage.addEventListener('mouseleave', () => { hover = null; $('tip').style.display = 'none'; });
+  return true;
+}
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+function build(items) {
+  towers.forEach((t) => { city.remove(t); t.geometry.dispose(); t.material.dispose(); });
+  towers = [];
+  const cols = Math.ceil(Math.sqrt(items.length)), rows = Math.ceil(items.length / cols), gap = 1.7;
+  items.forEach((it, i) => {
+    const kind = it.leak ? 'leak' : it.third ? 'third' : 'first';
+    const geo = new THREE.BoxGeometry(1, 1, 1); geo.translate(0, .5, 0);
+    const c = colorFor(kind);
+    const mat = new THREE.MeshStandardMaterial({ color: c, emissive: c.clone(), emissiveIntensity: .2, roughness: .4, metalness: .25 });
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set((i % cols - (cols - 1) / 2) * gap, 0, (Math.floor(i / cols) - (rows - 1) / 2) * gap);
+    const target = Math.min(9, Math.max(.3, Math.sqrt(it.gzip / 1024) * .55));
+    m.scale.set(1, reduce ? target : .01, 1);
+    m.userData = { target, kind, label: it.label };
+    city.add(m); towers.push(m);
+  });
+  const span = Math.max(cols, rows) * gap;
+  camera.userData.dist = Math.max(13, span * 1.35);
+}
+function pick(e, r) {
+  if (!towers.length) return;
+  const ray = new THREE.Raycaster();
+  ray.setFromCamera(new THREE.Vector2((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
+  const hit = ray.intersectObjects(towers)[0];
+  hover = hit ? hit.object : null;
+  const tip = $('tip');
+  if (hover) { tip.style.display = 'block'; tip.style.left = Math.min(e.clientX + 14, innerWidth - 350) + 'px'; tip.style.top = e.clientY + 14 + 'px'; tip.textContent = hover.userData.label; }
+  else tip.style.display = 'none';
+}
+function loop(t) {
+  requestAnimationFrame(loop);
+  if (!renderer || !stage.clientWidth) return;
+  if (!reduce) city.rotation.y += .0022;
+  const d = camera.userData.dist || 14;
+  camera.position.x += (mouse.x * 5 - camera.position.x) * .04;
+  camera.position.y += (d * .5 - mouse.y * 3 - camera.position.y) * .04;
+  camera.position.z = d;
+  camera.lookAt(0, 1.4, 0);
+  for (const m of towers) {
+    m.scale.y += (m.userData.target - m.scale.y) * .06;
+    m.material.emissiveIntensity = m.userData.kind === 'leak' ? .55 + (reduce ? 0 : .35 * Math.sin(t / 260)) : (m === hover ? .6 : .2);
+  }
+  renderer.render(scene, camera);
+}
+if (initGL()) {
+  build(Array.from({ length: 16 }, (_, i) => ({ gzip: 3000 + ((i * 7919) % 90000), third: i % 5 === 0, leak: false, label: 'Example script. Scan a site to see yours.' })));
+  requestAnimationFrame(loop);
+}
+
+// ---------- scan ----------
+const results = $('results');
+const row = (s) => '<div class="item"><span class="u mono" title="' + esc(s.url) + '">' + esc(s.url) + '</span>' +
+  '<span class="mono hide-s">' + (s.error ? esc(s.error) : kb(s.bytes)) + '</span><span class="mono">' + (s.error ? '' : kb(s.gzipBytes)) + '</span>' +
+  '<span class="chip hide-s ' + (s.thirdParty ? 't' : 'f') + '">' + (s.thirdParty ? 'Third-party' : 'Your script') + '</span></div>';
+
+$('f').onsubmit = async (e) => {
+  e.preventDefault();
+  const err = $('err'), btn = $('go'), url = $('u');
+  err.textContent = '';
+  if (!url.checkValidity() || !url.value) { err.textContent = 'Enter a full address such as https://yoursite.com'; url.focus(); return; }
+  if (!$('own').checked) { err.textContent = 'Please confirm you own this site or have permission to scan it.'; return; }
+  btn.disabled = true;
+  results.innerHTML = '<div class="blk" style="padding:0 0 64px"><div class="shell"><div class="core stats"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div></div>';
+  try {
+    const r = await fetch('/api/audit', { method: 'POST', body: JSON.stringify({ url: url.value, confirmOwner: true }) });
+    const d = await r.json();
+    if (d.error) { results.innerHTML = ''; err.textContent = d.error; return; }
+    const leaky = new Set(d.secretFindings.map((s) => s.script));
+    if (renderer) build(d.scripts.filter((s) => !s.error).map((s) => ({
+      gzip: s.gzipBytes, third: s.thirdParty, leak: leaky.has(s.url),
+      label: s.url + '  |  ' + kb(s.bytes) + ' raw  |  ' + kb(s.gzipBytes) + ' gzip',
+    })));
+    const shown = d.scripts.slice(0, 6), rest = d.scripts.slice(6);
+    results.innerHTML = '<div class="blk" style="padding:0 0 64px">' +
+      '<div class="shell"><div class="core"><div class="stats">' +
+        '<div class="stat"><b>' + d.scriptCount + '</b><span>scripts found</span></div>' +
+        '<div class="stat"><b>' + kb(d.totalGzipBytes) + '</b><span>gzip total, ' + kb(d.totalBytes) + ' raw</span></div>' +
+        '<div class="stat"><b class="' + (d.secretFindings.length ? 'bad' : 'ok') + '">' + d.secretFindings.length + '</b><span>possible leaked secrets</span></div>' +
+        '<div class="stat"><b class="' + (d.sourceMapsExposed.length ? 'bad' : 'ok') + '">' + d.sourceMapsExposed.length + '</b><span>source map references</span></div>' +
+      '</div>' +
+      d.secretFindings.map((s) => '<div class="find"><b class="bad">' + esc(s.type) + '</b> <span class="mono">' + esc(s.preview) + '</span><br><span class="muted mono">' + esc(s.script) + '</span></div>').join('') +
+      '<p class="muted" style="padding:6px 22px 0;margin:8px 0 0">Third-party hosts: ' + (d.thirdPartyHosts.map(esc).join(', ') || 'none') + '</p>' +
+      '<div class="list" id="lst">' + shown.map(row).join('') + '</div>' +
+      (rest.length ? '<div style="padding:4px 14px 18px"><button class="ghost" id="more" type="button">Show all ' + d.scripts.length + ' scripts</button></div>' : '') +
+      '</div></div></div>';
+    if (rest.length) $('more').onclick = (ev) => { $('lst').insertAdjacentHTML('beforeend', rest.map(row).join('')); ev.target.remove(); };
+    results.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  } catch (x) { results.innerHTML = ''; err.textContent = x.message; }
+  finally { btn.disabled = false; }
+};
+</script>
+</body>
+</html>
